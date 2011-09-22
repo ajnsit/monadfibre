@@ -29,7 +29,6 @@ source-repository this
 Library
   hs-source-dirs:    src
   Build-Depends:     base >= 3 && < 5
-               ,     stm
                ,     monadbi >= 0.1 && < 1.0
   exposed-modules:   Control.Monad.Fibre
 

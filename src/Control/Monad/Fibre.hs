@@ -19,8 +19,7 @@ module Control.Monad.Fibre (
   (<||>), (<&&>),
 ) where
 
-import Control.Concurrent (forkIO)
-import Control.Concurrent.STM (STM, newEmptyTMVar, takeTMVar, putTMVar, atomically)
+import Control.Concurrent (forkIO, newEmptyMVar, takeMVar, putMVar)
 
 import Control.Monad.Bi (MonadBi(..))
 
@@ -34,22 +33,22 @@ import Control.Monad.Bi (MonadBi(..))
 t1 <||> t2 = do
   t1io <- lower t1
   t2io <- lower t2
-  x <- raise $ atomically newEmptyTMVar
+  x <- raise newEmptyMVar
   raise $ do
-    forkIO $ t1io >>= (atomically . putTMVar x)
-    forkIO $ t2io >>= (atomically . putTMVar x)
-  raise $ atomically $ takeTMVar x
+    forkIO $ t1io >>= putMVar x
+    forkIO $ t2io >>= putMVar x
+  raise $ takeMVar x
 
 -- Parallelism
 (<&&>) :: (Monad m, MonadBi m IO) => m o1 -> m o2 -> m (o1,o2)
 t1 <&&> t2 = do
   t1io <- lower t1
   t2io <- lower t2
-  x1 <- raise $ atomically newEmptyTMVar
-  x2 <- raise $ atomically newEmptyTMVar
+  x1 <- raise newEmptyMVar
+  x2 <- raise newEmptyMVar
   raise $ do
-    forkIO $ t1io >>= (atomically . putTMVar x1)
-    forkIO $ t2io >>= (atomically . putTMVar x2)
-  xv1 <- raise $ atomically $ takeTMVar x1
-  xv2 <- raise $ atomically $ takeTMVar x2
+    forkIO $ t1io >>= putMVar x1
+    forkIO $ t2io >>= putMVar x2
+  xv1 <- raise $ takeMVar x1
+  xv2 <- raise $ takeMVar x2
   return (xv1,xv2)
