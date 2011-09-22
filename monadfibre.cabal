@@ -1,5 +1,5 @@
 Name:                monadfibre
-Version:             0.1.2
+Version:             0.1.2.1
 Description:         This package defines Monadic functions which provide Choice and Parallelism - (&lt;||&rt;) and (&lt;&&&rt;)
                      - that work on Monads that provide a (MonadBi m IO) instance.
 
@@ -23,8 +23,8 @@ source-repository head
 
 source-repository this
   type:     git
-  location: http://github.com/ajnsit/monadfibre/tree/v0.1.2
-  tag:      v0.1.2
+  location: http://github.com/ajnsit/monadfibre/tree/v0.1.2.1
+  tag:      v0.1.2.1
 
 Library
   hs-source-dirs:    src
